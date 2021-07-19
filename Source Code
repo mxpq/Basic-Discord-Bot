@@ -1,0 +1,57 @@
+// Authors: Mx#0999
+
+const { GuildMember } = require('discord.js');
+const Discord = require('Discord.js');
+
+const client = new Discord.Client();
+
+const prefix = '-'; // This is the bot prefix!
+
+const fs = require('fs');
+
+client.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file=>file.endsWith('.js'));
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+
+    client.commands.set(command.name, command);
+}
+
+client.once('ready', () => {
+    console.log('Bot is online!'); // This will log in the console that the Bot is online!
+    client.user.setActivity("On mc.rooxchicken.com"); // You can set a custom status! 
+      
+
+});
+
+
+client.on('guildMemberAdd', guildMember =>{
+    let welcomeRole = guildMember.guild.roles.cache.find(role => role.name === 'ROLE NAME');
+ 
+    guildMember.roles.add(welcomeRole);
+    guildMember.guild.channels.cache.get(CHANNEL ID).send(`**Welcome to SERVER <@${guildMember.user.id}>!** Go to the verification channel to get started!`)
+});
+
+// This will welcome the users!
+
+
+
+
+client.on('message', message =>{
+    if(!message.content.startsWith(prefix) || message.author.bot) return;    
+ 
+    const args = message.content.slice(prefix.length).split(/ +/);
+    const command = args.shift().toLowerCase();
+
+    if(command === 'help'){
+       client.commands.get('help').execute(message,args, Discord); // Make a new file in the file to get these commands to work. This uses an advanced setup
+    }
+    if(command === 'test'){
+        client.commands.get('test').execute(message, args);
+    }
+// Add as many commands you want!
+
+});
+
+client.login(BOT TOKEN DO NOT SHARE);
